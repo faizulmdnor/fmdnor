@@ -123,7 +123,7 @@ def main():
         try:
             length = int(input('Password length: '))
             if 8 <= length <= 15:
-                break
+                w = False  # instead of break, you can use w = False to exit the loop
             else:
                 print('Your password length should be between 8 - 15 characters long.')
         except ValueError:
@@ -134,13 +134,11 @@ def main():
         try:
             number_of_passwords = int(input('Number of passwords to generate: '))
             if number_of_passwords <= 20:
-                break
+                n = False  # instead of break, you can use n = False to exit the loop
             else:
                 print('Too many passwords to generate. Max = 20')
         except ValueError:
             print('Please enter a valid integer for the number of passwords.')
-
-    print('\nPlease choose your option: \n')
 
     good_passwords = []
 
