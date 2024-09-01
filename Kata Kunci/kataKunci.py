@@ -109,9 +109,13 @@ def is_strong_password(password):
     # Password passed all checks
     return True
 
-def restart_script():
-    print("\nThe selected password is weak. Restarting the script...\n")
-    main()
+def restart_script(max_attempts=3):
+    attempts = 0
+    while attempts < max_attempts:
+        attempts += 1
+        print("\nThe selected password is weak. Restarting the script...\n")
+        main()
+    print("Max attempts reached. Exiting script.")
 
 def main():
     w = True
@@ -152,8 +156,13 @@ def main():
             print(f"{RED}Option {i} not recommended:{RESET} {random_string}")
 
     if len(good_passwords) > 0:
-        selected_password = input('\nYour password: ')
-        save_password(selected_password)
+        while True:
+            selected_password = input('\nYour password: ')
+            if selected_password in good_passwords:
+                save_password(selected_password)
+                break
+            else:
+                print("Please select a password from the recommended options.")
     else:
         restart_script()
 
