@@ -149,3 +149,8 @@ def get_death_maternal_state():
     df = pd.read_parquet(URL_DATA)
     if 'date' in df.columns: df['date'] = pd.to_datetime(df['date'])
     return df
+
+birth_rate = get_birth_rate()
+birth_state = get_birth_state()
+birth_state_sex = get_birth_sex_ethnic_state()
+
