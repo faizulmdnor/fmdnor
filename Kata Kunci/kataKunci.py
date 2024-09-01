@@ -11,6 +11,10 @@ ATTEMPTS_PER_SECOND = 10000
 SPECIAL_CHARACTERS = "!@#$%&?-"
 FILEPATH = 'D:/fmdnor/fmdnor/Kata Kunci/'
 FILENAME = 'passwordlist.csv'
+GREEN = "\033[92m"
+RED = "\033[91m"
+YELLOW = "\033[93m"
+RESET = "\033[0m"
 
 def save_password(my_password):
     try:
@@ -42,8 +46,7 @@ def save_password(my_password):
 
 
 def time_to_crack(password, character_set_size, attempts_per_second):
-    yellow = "\033[93m"
-    reset = "\033[0m"
+
     password_length = len(password)
     combinations = math.pow(character_set_size, password_length)
     time_seconds = combinations / attempts_per_second
@@ -74,7 +77,7 @@ def time_to_crack(password, character_set_size, attempts_per_second):
     seconds = remaining_seconds
 
     print(
-        f"{yellow}Time to crack: {int(years)} years, {int(months)} months, {int(days)} days, {int(hours)} hours, {int(minutes)} minutes, and {int(seconds)} seconds{reset}")
+        f"{YELLOW}Time to crack: {int(years)} years, {int(months)} months, {int(days)} days, {int(hours)} hours, {int(minutes)} minutes, and {int(seconds)} seconds{RESET}")
 
     return time_seconds
 
@@ -111,10 +114,6 @@ def restart_script():
     main()
 
 def main():
-    GREEN = "\033[92m"
-    RED = "\033[91m"
-    RESET = "\033[0m"
-
     w = True
     while w:
         try:
