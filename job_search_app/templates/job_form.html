@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Search Log</title>
+    <!-- Include flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
     <h1>Log New Job Application</h1>
@@ -14,8 +16,11 @@
         <label>Position:</label>
         <input type="text" name="position" required><br><br>
 
-        <label>Date Applied (DD-MM-YYYY):</label>
-        <input type="text" name="date_applied" required><br><br>
+        <label>Location:</label>
+        <input type="text" name="location" required><br><br>
+
+        <label>Date Applied:</label>
+        <input type="text" id="date_applied" name="date_applied" required><br><br>
 
         <label>Status:</label>
         <input type="text" name="status" required><br><br>
@@ -44,5 +49,14 @@
 
         <input type="submit" value="Submit">
     </form>
+
+    <!-- Include flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize flatpickr with the desired date format
+        flatpickr("#date_applied", {
+            dateFormat: "d-m-Y"  // Format as DD-MM-YYYY
+        });
+    </script>
 </body>
 </html>

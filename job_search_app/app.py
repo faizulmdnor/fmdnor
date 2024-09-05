@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 folder_path = 'C:/Users/fmdno/Dropbox/My Resume/Job Search/'
 file_name = 'Job_search_log.csv'
-today = datetime.today().strftime("%d-%m-%Y")
+today = datetime.today().strftime("%d/%m/%Y")
 
 
 @app.route('/')
@@ -20,6 +20,7 @@ def submit_job():
     # Get form data from HTML input
     company = request.form['company']
     position = request.form['position']
+    location = request.form['location']
     date_applied = request.form['date_applied']
     status = request.form['status']
     application_method = request.form['application_method']
@@ -37,8 +38,9 @@ def submit_job():
         'Applied Date': [date_applied],
         'Company': [company],
         'Position Applied': [position],
+        'Location': [location],
         'Status': [status],
-        'Status Date': [datetime.now().strftime("%d-%m-%Y %H:%M")],
+        'Status Date': [datetime.now().strftime("%d/%m/%Y %H:%M")],
         'Application': [application_method],
         'Information': [information]
     })
