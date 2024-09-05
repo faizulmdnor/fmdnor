@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Search Log</title>
+</head>
+<body>
+    <h1>Log New Job Application</h1>
+    <form method="POST" action="/submit">
+        <label>Company:</label>
+        <input type="text" name="company" required><br><br>
+
+        <label>Position:</label>
+        <input type="text" name="position" required><br><br>
+
+        <label>Date Applied (DD-MM-YYYY):</label>
+        <input type="text" name="date_applied" required><br><br>
+
+        <label>Status:</label>
+        <input type="text" name="status" required><br><br>
+
+        <label>Application Method:</label>
+        <select name="application_method" required>
+            <option value="online">Online</option>
+            <option value="walk-in">Walk-in</option>
+            <option value="others">Others</option>
+        </select><br><br>
+
+        <div id="online">
+            <label>Website URL:</label>
+            <input type="text" name="website"><br><br>
+        </div>
+
+        <div id="walk-in">
+            <label>Contact Person/Address:</label>
+            <input type="text" name="contact"><br><br>
+        </div>
+
+        <div id="others">
+            <label>Other Information:</label>
+            <input type="text" name="info"><br><br>
+        </div>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
