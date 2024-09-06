@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Job Logs</title>
+    <style>
+        .status-expired {
+            background-color: red;
+            color: white;
+        }
+        .status-reschedule {
+            background-color: yellow;
+        }
+        .status-online-interview {
+            background-color: green;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <h1>Job Logs</h1>
@@ -14,6 +27,7 @@
                 <th>Company</th>
                 <th>Position</th>
                 <th>Location</th>
+                <th>Date Applied</th>
                 <th>Status</th>
                 <th>Status Date</th>
                 <th>Application Method</th>
@@ -27,7 +41,18 @@
                 <td>{{ job['Company'] }}</td>
                 <td>{{ job['Position Applied'] }}</td>
                 <td>{{ job['Location'] }}</td>
-                <td>{{ job['Status'] }}</td>
+                <td>{{ job['Applied Date'] }}</td>
+                <td class="
+                    {% if job['Status'] == 'Expired' %}
+                        status-expired
+                    {% elif job['Status'] == 'Reschedule - Interview' %}
+                        status-reschedule
+                    {% elif job['Status'] == 'Online - Interview' %}
+                        status-online-interview
+                    {% endif %}
+                ">
+                    {{ job['Status'] }}
+                </td>
                 <td>{{ job['Status Date'] }}</td>
                 <td>{{ job['Application'] }}</td>
                 <td><a href="{{ url_for('edit_job', index=loop.index0) }}">Edit</a></td>

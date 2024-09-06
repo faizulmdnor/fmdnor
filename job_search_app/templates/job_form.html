@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>Log Your New Job Application</h1>
-    <form method="POST" action="/submit">
+    <form method="POST" action="{{ url_for('add_job', index=index) }}">
         <label>Company:</label>
         <input type="text" name="company" required><br><br>
 

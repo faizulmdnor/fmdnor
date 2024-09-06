@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Job Log</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
     <h1>Edit Job Log</h1>
@@ -18,13 +19,24 @@
         <input type="text" name="location" value="{{ job['Location'] }}" required><br><br>
 
         <label>Date Applied:</label>
-        <input type="text" name="date_applied" value="{{ job['Applied Date'] }}" required><br><br>
+        <input type="text" id="date_applied" name="date_applied" value="{{ job['Applied Date'] }}" required><br><br>
 
         <label>Status:</label>
-        <input type="text" name="status" value="{{ job['Status'] }}" required><br><br>
+        <select name="status" required>
+            <option value="Applied" {{ 'selected' if job['Status'] == 'Applied' else '' }}>Applied</option>
+            <option value="In Progress" {{ 'selected' if job['Status'] == 'In Progress' else '' }}>In Progress</option>
+            <option value="Under Review" {{ 'selected' if job['Status'] == 'Under Review' else '' }}>Under Review</option>
+            <option value="Online - Interview" {{ 'selected' if job['Status'] == 'Online - Interview' else '' }}>Online - Interview</option>
+            <option value="Reschedule - Interview" {{ 'selected' if job['Status'] == 'Reschedule - Interview' else '' }}>Reschedule - Interview</option>
+            <option value="Expired" {{ 'selected' if job['Status'] == 'Expired' else '' }}>Expired</option>
+        </select><br><br>
 
         <label>Application Method:</label>
-        <input type="text" name="application_method" value="{{ job['Application'] }}" required><br><br>
+        <select name="application_method" required>
+            <option value="online" {{ 'selected' if job['Application Method'] == 'online' else '' }}>Online</option>
+            <option value="walk-in" {{ 'selected' if job['Application Method'] == 'walk-in' else '' }}>Walk-in</option>
+            <option value="others" {{ 'selected' if job['Application Method'] == 'others' else '' }}>Others</option>
+        </select><br><br>
 
         <label>Information:</label>
         <input type="text" name="info" value="{{ job['Information'] }}"><br><br>
@@ -33,5 +45,14 @@
     </form>
     <br>
     <button onclick="window.location.href='{{ url_for('view_jobs') }}'">Back to View Jobs</button>
+
+    <!-- Include flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize flatpickr with the desired date format
+        flatpickr("#date_applied", {
+            dateFormat: "d-m-Y"  // Format as DD-MM-YYYY
+        });
+    </script>
 </body>
 </html>
