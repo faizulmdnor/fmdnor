@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
-    <h1>Log New Job Application</h1>
+    <h1>Log Your New Job Application</h1>
     <form method="POST" action="/submit">
         <label>Company:</label>
         <input type="text" name="company" required><br><br>
@@ -23,7 +23,12 @@
         <input type="text" id="date_applied" name="date_applied" required><br><br>
 
         <label>Status:</label>
-        <input type="text" name="status" required><br><br>
+        <select name="status" required>
+            <option value="Applied">Applied</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Under Review">Under Review</option>
+            <option value="Expired">Expired</option>
+        </select><br><br>
 
         <label>Application Method:</label>
         <select name="application_method" required>
@@ -49,6 +54,8 @@
 
         <input type="submit" value="Submit">
     </form>
+    <br>
+    <button onclick="window.location.href='{{ url_for('menu') }}'">Back to Menu</button>
 
     <!-- Include flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
