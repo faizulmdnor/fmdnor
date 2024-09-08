@@ -11,7 +11,7 @@ app = Flask(__name__)
 # Define folder path and file name for the CSV file
 folder_path = 'C:/Users/fmdno/Dropbox/My Resume/Job Search/'
 file_name = 'Job_search_log.csv'
-today = datetime.today().strftime("%d/%m/%Y")
+today = datetime.today().strftime('%d/%m/%Y')
 
 
 # Home page route
@@ -76,8 +76,6 @@ def view_jobs():
         # Read job logs from the CSV file
         df = pd.read_csv(os.path.join(folder_path, file_name))
         df['No.'] = df.index + 1  # Add a column for row numbers
-        df['RecordDate'] = pd.to_datetime(df['RecordDate'], format='%d/%m/%Y').dt.strftime('%d/%m/%Y')  # Convert RecordDate to datetime
-        df['Applied Date'] = pd.to_datetime(df['Applied Date'], format='%d/%m/%Y').dt.strftime('%d/%m/%Y')
         jobs = df.to_dict(orient='records')  # Convert DataFrame to list of dictionaries for rendering
     else:
         jobs = []
@@ -122,7 +120,7 @@ def stat():
         jobs = pd.read_csv(os.path.join(folder_path, file_name))
 
         # Convert 'Applied Date' to datetime with correct format
-        jobs['Applied Date'] = pd.to_datetime(jobs['Applied Date'], format='%d/%m/%Y').dt.strftime('%d/%m/%Y')
+        jobs['Applied Date'] = pd.to_datetime(jobs['Applied Date'], format='%d/%m/%Y', errors='coerce').dt.strftime('%d/%m/%Y')
         jobs['Month'] = pd.to_datetime(jobs['Applied Date'], format='%d/%m/%Y').dt.month_name()
 
         # Count jobs by month

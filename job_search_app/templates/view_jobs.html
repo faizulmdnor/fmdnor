@@ -33,6 +33,7 @@
                 <th>Status Date</th>
                 <th>Application Method</th>
                 <th>Actions</th>
+                <th>Information</th>
             </tr>
         </thead>
         <tbody>
@@ -58,6 +59,7 @@
                 <td>{{ job['Status Date'] }}</td>
                 <td>{{ job['Application'] }}</td>
                 <td><a href="{{ url_for('edit_job', index=loop.index0) }}">Edit</a></td>
+                <td><a href=" {{ job['Information'] }} " target="_blank">{{ job['Information'] }}</a></td>
             </tr>
             {% endfor %}
         </tbody>
