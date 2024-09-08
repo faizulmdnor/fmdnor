@@ -13,6 +13,7 @@
     <br>
     <button onclick="window.location.href='{{ url_for('menu') }}'">Back to Menu</button>
     <br>
+    <br>
     <form method="POST" action="{{ url_for('add_job', index=index) }}">
         <label>Company:</label>
         <input type="text" name="company" required><br><br>
