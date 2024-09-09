@@ -31,6 +31,9 @@
             <option value="Expired" {{ 'selected' if job['Status'] == 'Expired' else '' }}>Expired</option>
         </select><br><br>
 
+        <label>Interview Date:</label>
+        <input type="text" id="interview_date" name="interview_date" value="{{ job['Interview Date'] }}" required><br><br>
+
         <label>Application Method:</label>
         <select name="application_method" required>
             <option value="online" {{ 'selected' if job['Application Method'] == 'online' else '' }}>Online</option>
@@ -52,6 +55,13 @@
         // Initialize flatpickr with the desired date format
         flatpickr("#date_applied", {
             dateFormat: "d-m-Y"  // Format as DD/MM/YYYY
+        });
+
+        // Initialize flatpickr with the desired date and time format
+        flatpickr("#interview_date", {
+            dateFormat: "d-m-Y H:i",  // Format as DD/MM/YYYY HH:MM
+            enableTime: true,         // Enable time selection
+            time_24hr: true           // Use 24-hour time format
         });
     </script>
 </body>

@@ -19,9 +19,11 @@
     </style>
 </head>
 <body>
-    <h1>Job Logs</h1>
+    <h1>Jobs Log</h1>
+    <br>
     <br>
     <button onclick="window.location.href='{{ url_for('menu') }}'">Back to Menu</button>
+    <br>
     <br>
     <table border="1">
         <thead>
@@ -35,6 +37,7 @@
                 <th>Status</th>
                 <th>Status Date</th>
                 <th>Application Method</th>
+                <th>Interview Date</th>
                 <th>Actions</th>
                 <th>Information</th>
             </tr>
@@ -61,6 +64,7 @@
                 </td>
                 <td>{{ job['Status Date'] }}</td>
                 <td>{{ job['Application'] }}</td>
+                <td>{{ job['Interview Date'] }}</td>
                 <td><a href="{{ url_for('edit_job', index=loop.index0) }}">Edit</a></td>
                 <td><a href=" {{ job['Information'] }} " target="_blank">{{ job['Information'] }}</a></td>
             </tr>

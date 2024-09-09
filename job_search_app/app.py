@@ -102,6 +102,7 @@ def edit_job(index):
             df.at[index, 'Application'] = request.form['application_method']
             df.at[index, 'Information'] = request.form['info']
             df.at[index, 'Status Date'] = datetime.now().strftime("%d/%m/%Y %H:%M")
+            df.at[index, 'Interview Date'] = request.form['interview_date']
 
             # Save the updated DataFrame back to the CSV file
             df.to_csv(os.path.join(folder_path, file_name), index=False)
