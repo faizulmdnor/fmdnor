@@ -97,7 +97,13 @@ def add_job():
 def view_jobs():
     """Render a page showing all job logs."""
     if os.path.exists(os.path.join(folder_path, file_name)):
+        # Read job logs from the CSV file
         df = pd.read_csv(os.path.join(folder_path, file_name))
+        df['No.'] = df.index + 1  # Add a column for row numbers
+        record_date = df['RecordDate'].tolist()
+        df['RecordDate'] = date_format(record_date)
+        applied_date = df['Applied Date'].tolist()
+        df['Applied Date'] = date_format(applied_date)
         jobs = df.to_dict(orient='records')  # Convert DataFrame to list of dictionaries for rendering
     else:
         jobs = []
