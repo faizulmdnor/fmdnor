@@ -1,7 +1,7 @@
 import base64
 import io
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import pandas as pd
 from flask import Flask, render_template, request, redirect, url_for
@@ -11,8 +11,32 @@ app = Flask(__name__)
 # Define folder path and file name for the CSV file
 folder_path = 'C:/Users/fmdno/Dropbox/My Resume/Job Search/'
 file_name = 'Job_search_log.csv'
-today = datetime.today().strftime('%d/%m/%Y')
+today = datetime.today().strftime('%d-%m-%Y')
 
+def date_format(date_list):
+    # Convert 'Applied Date' to a standard format
+
+    new_applied_date = []
+    date_strings = date_list
+    for date_string in date_strings:
+        try:
+            date_obj = datetime.strptime(date_string, '%d-%m-%Y')
+        except ValueError:
+            date_obj = datetime.strptime(date_string, '%d/%m/%Y')
+        new_applied_date.append(date_obj.strftime('%d-%m-%Y'))
+
+    return new_applied_date
+
+if os.path.exists(os.path.join(folder_path, file_name)):
+    # Read job logs from the CSV file
+    df = pd.read_csv(os.path.join(folder_path, file_name))
+    df['No.'] = df.index + 1  # Add a column for row numbers
+    record_date = df['RecordDate'].tolist()
+    df['RecordDate'] = date_format(record_date)
+    applied_date = df['Applied Date'].tolist()
+    df['Applied Date'] = date_format(applied_date)
+    df2 = df[['No.', 'RecordDate', 'Applied Date', 'Company', 'Position Applied', 'Location', 'Status', 'Status Date', 'Application', 'Information', 'Interview Date']]
+    df.to_csv(os.path.join(folder_path, file_name), index=False)
 
 # Home page route
 @app.route('/')
@@ -50,7 +74,7 @@ def add_job():
             'Position Applied': [position],
             'Location': [location],
             'Status': [status],
-            'Status Date': [datetime.now().strftime("%d/%m/%Y %H:%M")],
+            'Status Date': [datetime.now().strftime("%d-%m-%Y %H:%M")],
             'Application': [application_method],
             'Information': [information]
         })
@@ -73,9 +97,7 @@ def add_job():
 def view_jobs():
     """Render a page showing all job logs."""
     if os.path.exists(os.path.join(folder_path, file_name)):
-        # Read job logs from the CSV file
         df = pd.read_csv(os.path.join(folder_path, file_name))
-        df['No.'] = df.index + 1  # Add a column for row numbers
         jobs = df.to_dict(orient='records')  # Convert DataFrame to list of dictionaries for rendering
     else:
         jobs = []
@@ -101,7 +123,7 @@ def edit_job(index):
             df.at[index, 'Status'] = request.form['status']
             df.at[index, 'Application'] = request.form['application_method']
             df.at[index, 'Information'] = request.form['info']
-            df.at[index, 'Status Date'] = datetime.now().strftime("%d/%m/%Y %H:%M")
+            df.at[index, 'Status Date'] = datetime.now().strftime("%d-%m-%Y %H:%M")
             df.at[index, 'Interview Date'] = request.form['interview_date']
 
             # Save the updated DataFrame back to the CSV file
@@ -121,8 +143,9 @@ def stat():
         jobs = pd.read_csv(os.path.join(folder_path, file_name))
 
         # Convert 'Applied Date' to datetime with correct format
-        jobs['Applied Date'] = pd.to_datetime(jobs['Applied Date'], format='%d/%m/%Y', errors='coerce').dt.strftime('%d/%m/%Y')
-        jobs['Month'] = pd.to_datetime(jobs['Applied Date'], format='%d/%m/%Y').dt.month_name()
+        applied_date = jobs['Applied Date'].tolist()
+        jobs['Applied Date'] = date_format(applied_date)
+        jobs['Month'] = pd.to_datetime(jobs['Applied Date'], format='%d-%m-%Y').dt.month_name()
 
         # Count jobs by month
         monthly_jobs = jobs['Month'].value_counts().sort_index()
@@ -130,21 +153,63 @@ def stat():
         # Count jobs by status
         status_counts = jobs['Status'].value_counts()
 
+        # Count jobs by days
+        daily_jobs = jobs.groupby('Applied Date').size().reset_index(name='Job Count')
+        daily_jobs['Applied Date'] = pd.to_datetime(daily_jobs['Applied Date'], format='%d-%m-%Y')
+        daily_jobs = daily_jobs.sort_values(by='Applied Date', ascending=True)
+        daily_jobs.reset_index(drop=True, inplace=True)
+
+        # Calculate number of days from start_date to today
+        start_date = daily_jobs['Applied Date'].iloc[0]
+        num_of_days = (datetime.today() - start_date).days
+
+        # Create a DataFrame with a date range and initialize counts
+        date_list = [start_date + timedelta(days=x) for x in range(num_of_days + 1)]
+        df2_date = pd.DataFrame(date_list, columns=['Date'])
+        df2_date.set_index('Date', inplace=True)
+
+        # Merge with daily_jobs to fill in counts
+        df2_date = df2_date.join(daily_jobs.set_index('Applied Date'), how='left').reset_index()
+
+        # Fill NaN values with 0 for days with no jobs
+        df2_date['Job Count'].fillna(0, inplace=True)
+
         # Create plots
-        fig, axs = plt.subplots(2, 1, figsize=(19, 12))
+        fig, axs = plt.subplots(3, 1, figsize=(15, 20))
 
         # Number of jobs applied by month plot
-        monthly_jobs.plot(kind='bar', ax=axs[0])
+        monthly_jobs.plot(kind='bar', ax=axs[0], color='skyblue')
         axs[0].set_title('Number of Jobs Applied by Month')
         axs[0].set_xlabel('Month')
         axs[0].set_ylabel('Number of Jobs')
-        axs[0].tick_params(axis='x', rotation=0)
+        axs[0].tick_params(axis='x', rotation=45)
+
+        # Add table values to the monthly jobs bar chart
+        for i, value in enumerate(monthly_jobs):
+            axs[0].text(i, value + 0.5, str(value), ha='center', va='bottom')
+
+        # Number of jobs by day plot
+        df2_date.plot(kind='line', x='Date', y='Job Count', ax=axs[1], color='lightcoral')
+        axs[1].set_title('Number of Jobs by Day')
+        axs[1].set_xlabel('Date')
+        axs[1].set_ylabel('Job Count')
+
+        # Add table values to the daily jobs line chart
+        for i, value in df2_date.iterrows():
+            axs[1].text(value['Date'], value['Job Count'] + 0.5, str(int(value['Job Count'])), ha='center', va='bottom')
 
         # Number of jobs by status plot
-        status_counts.plot(kind='barh', ax=axs[1])
-        axs[1].set_title('Number of Jobs by Status')
-        axs[1].set_xlabel('Status')
-        axs[1].set_ylabel('Number of Jobs')
+        status_counts.plot(kind='bar', ax=axs[2], color='lightcoral')
+        axs[2].set_title('Number of Jobs by Status')
+        axs[2].set_xlabel('Job Status Category')
+        axs[2].set_ylabel('Number of Jobs')
+        axs[2].tick_params(axis='x', rotation=0)
+
+        # Add table values to the status bar chart
+        for i, value in enumerate(status_counts):
+            axs[2].text(i, value + 0.5, str(value), ha='center', va='bottom')
+
+
 
         # Save plot to a BytesIO object
         img = io.BytesIO()

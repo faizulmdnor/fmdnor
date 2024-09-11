@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Job Logs</title>
     <style>
-        .status-expired {
+        .status-red {
             background-color: red;
             color: white;
         }
-        .status-reschedule {
+        .status-yellow {
             background-color: yellow;
+            color: black;
         }
-        .status-online-interview {
+        .status-green {
             background-color: green;
-            color: white;
+            color: black;
+        }
+        .status-blue {
+            background-color: blue;
+            color: black;
         }
     </style>
 </head>
@@ -53,11 +58,15 @@
                 <td>{{ job['Applied Date'] }}</td>
                 <td class="
                     {% if job['Status'] == 'Expired' %}
-                        status-expired
+                        status-red
+                    {% elif job['Status'] == 'Rejected' %}
+                        status-red
                     {% elif job['Status'] == 'Reschedule - Interview' %}
-                        status-reschedule
+                        status-yellow
                     {% elif job['Status'] == 'Online - Interview' %}
-                        status-online-interview
+                        status-green
+                    {% else %}
+                        status-blue
                     {% endif %}
                 ">
                     {{ job['Status'] }}
