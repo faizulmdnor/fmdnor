@@ -69,6 +69,13 @@
         flatpickr("#date_applied", {
             dateFormat: "d-m-Y"  // Format as DD-MM-YYYY
         });
+            document.querySelector('form').addEventListener('submit', function(event) {
+        const dateApplied = document.querySelector('#date_applied').value;
+        if (!dateApplied) {
+            event.preventDefault();  // Prevent form submission
+            alert("Date Applied is required.");
+        }
+    });
     </script>
 </body>
 </html>
